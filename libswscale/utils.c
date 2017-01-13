@@ -1167,7 +1167,7 @@ av_cold int sws_init_context(SwsContext *c, SwsFilter *srcFilter,
     const AVPixFmtDescriptor *desc_dst;
     int ret = 0;
     enum AVPixelFormat tmpFmt;
-
+    int filterCodeTest;
     cpu_flags = av_get_cpu_flags();
     flags     = c->flags;
     emms_c();
@@ -1608,10 +1608,11 @@ av_cold int sws_init_context(SwsContext *c, SwsFilter *srcFilter,
 #endif
 
 #ifdef MAP_ANONYMOUS
-            if (c->lumMmxextFilterCode == MAP_FAILED || c->chrMmxextFilterCode == MAP_FAILED)
+            filterCodeTest = (c->lumMmxextFilterCode == MAP_FAILED || c->chrMmxextFilterCode == MAP_FAILED);
 #else
-            if (!c->lumMmxextFilterCode || !c->chrMmxextFilterCode)
+            filterCodeTest = (!c->lumMmxextFilterCode || !c->chrMmxextFilterCode);
 #endif
+            if (filterCodeTest)
             {
                 av_log(c, AV_LOG_ERROR, "Failed to allocate MMX2FilterCode\n");
                 return AVERROR(ENOMEM);
